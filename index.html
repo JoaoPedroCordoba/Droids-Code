@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Droids Code — Entre no universo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-base:#0A0D12;
+    --bg-panel:#15181D;
+    --border:#2C323B;
+    --text-primary:#D8DCE2;
+    --text-secondary:#7F8C8D;
+    --surface-inactive:#3A4750;
+    --accent:#FF1A1A;
+    --accent-press:#5C0808;
+    --ind-1:#E5AA70;
+    --ind-2:#D68910;
+    --font-display:'Chakra Petch', 'Arial Narrow', sans-serif;
+    --font-body:'IBM Plex Sans', 'Segoe UI', Arial, sans-serif;
+    --font-mono:'IBM Plex Mono', 'Courier New', monospace;
+    --nav-h:64px;
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="light"]){ /* brand is intentionally dark regardless of system theme */ }
+  }
+  :root[data-theme="dark"]{ }
+
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  html{scroll-padding-top:calc(var(--nav-h) + env(safe-area-inset-top,0px));}
+  body{
+    margin:0;
+    background:var(--bg-base);
+    color:var(--text-primary);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.6;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;}
+  ::selection{background:var(--accent);color:#0A0D12;}
+
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+  h1,h2,h3{font-family:var(--font-display);font-weight:600;margin:0;color:var(--text-primary);line-height:1.15;letter-spacing:-0.01em;}
+  h1{font-size:clamp(2.1rem,5vw,3.4rem);font-weight:700;}
+  h2{font-size:clamp(1.5rem,3vw,2.15rem);}
+  h3{font-size:1.2rem;}
+  p{margin:0 0 1em;color:var(--text-primary);max-width:62ch;}
+  p:last-child{margin-bottom:0;}
+  .muted{color:var(--text-secondary);}
+  .mono{font-family:var(--font-mono);}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+  .section{padding:88px 0;border-top:1px solid var(--border);}
+  .section:first-of-type{border-top:none;}
+  .section-head{max-width:640px;margin-bottom:44px;}
+  .section-head .tag{font-family:var(--font-mono);font-size:12.5px;color:var(--ind-1);margin:0 0 10px;letter-spacing:0.02em;}
+  .section-head h2{margin-bottom:14px;}
+  .section-head p{color:var(--text-secondary);}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--font-display);font-weight:600;font-size:15px;letter-spacing:0.01em;
+    padding:13px 26px;border-radius:3px;border:1px solid transparent;cursor:pointer;
+    transition:background-color .15s ease, border-color .15s ease, color .15s ease, transform .08s ease;
+    white-space:nowrap;
+  }
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--accent);color:#0A0D12;border-color:var(--accent);}
+  .btn-primary:hover{background:#ff3d3d;border-color:#ff3d3d;}
+  .btn-primary:active{background:var(--accent-press);border-color:var(--accent-press);color:var(--text-primary);}
+  .btn-secondary{background:transparent;color:var(--text-primary);border-color:var(--border);}
+  .btn-secondary:hover{border-color:var(--text-secondary);}
+  .btn-secondary:active{background:var(--bg-panel);}
+  .btn-ghost{background:transparent;color:var(--text-secondary);border-color:transparent;padding:13px 14px;}
+  .btn-ghost:hover{color:var(--text-primary);}
+  .btn[disabled]{background:var(--surface-inactive);border-color:var(--surface-inactive);color:var(--text-secondary);cursor:not-allowed;}
+  .btn-sm{padding:9px 16px;font-size:13px;}
+
+  /* ---------- Nav ---------- */
+  .nav{
+    position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:50;
+    padding-top:env(safe-area-inset-top,0px);
+    background:rgba(10,13,18,0.88);backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-row{max-width:1180px;margin:0 auto;padding:0 20px;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;gap:16px;}
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:700;font-size:18px;letter-spacing:0.02em;color:var(--text-primary);background:none;border:none;cursor:pointer;padding:0;}
+  .brand-mark{width:26px;height:26px;flex:none;}
+  .nav-links{display:flex;align-items:center;gap:4px;}
+  .nav-link{font-family:var(--font-body);font-weight:500;font-size:14px;color:var(--text-secondary);padding:10px 14px;border-radius:3px;position:relative;background:none;border:none;cursor:pointer;}
+  .nav-link:hover{color:var(--text-primary);}
+  .nav-link[aria-current="page"]{color:var(--text-primary);}
+  .nav-link[aria-current="page"]::after{content:"";position:absolute;left:14px;right:14px;bottom:4px;height:2px;background:var(--accent);}
+  .nav-cta{margin-left:8px;}
+  .nav-desktop{display:flex;align-items:center;gap:8px;}
+  .menu-btn{display:none;background:none;border:1px solid var(--border);border-radius:3px;width:40px;height:40px;color:var(--text-primary);cursor:pointer;align-items:center;justify-content:center;}
+
+  .mobile-menu{
+    position:fixed;inset:0;z-index:60;background:var(--bg-base);
+    display:none;flex-direction:column;
+    padding-top:calc(var(--nav-h) + env(safe-area-inset-top,0px));
+  }
+  .mobile-menu.open{display:flex;}
+  .mobile-menu-head{position:fixed;top:0;left:0;right:0;height:var(--nav-h);padding-top:env(safe-area-inset-top,0px);display:flex;align-items:center;justify-content:space-between;padding-left:20px;padding-right:20px;border-bottom:1px solid var(--border);}
+  .mobile-menu nav{display:flex;flex-direction:column;padding:8px 24px 24px;}
+  .mobile-menu .nav-link{font-size:22px;font-family:var(--font-display);text-align:left;padding:16px 4px;border-bottom:1px solid var(--border);border-radius:0;}
+  .mobile-menu .nav-link::after{display:none;}
+  .mobile-menu-foot{margin-top:auto;padding:24px;display:flex;flex-direction:column;gap:12px;}
+
+  /* ---------- Hero ---------- */
+  .hero{padding-top:calc(var(--nav-h) + 56px);padding-bottom:72px;border-top:none;}
+  .hero-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:56px;align-items:center;}
+  .hero-eyebrow{font-family:var(--font-mono);font-size:12.5px;color:var(--ind-1);margin:0 0 16px;}
+  .hero h1{margin-bottom:18px;}
+  .hero-lede{font-size:1.08rem;color:var(--text-secondary);max-width:52ch;}
+  .hero-ctas{display:flex;gap:14px;margin-top:32px;flex-wrap:wrap;}
+
+  .terminal-panel{
+    background:var(--bg-panel);border:1px solid var(--border);border-radius:4px;
+    font-family:var(--font-mono);font-size:13px;color:var(--text-secondary);
+    overflow:hidden;
+  }
+  .terminal-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);}
+  .terminal-dots{display:flex;gap:6px;}
+  .terminal-dots span{width:8px;height:8px;border-radius:50%;background:var(--surface-inactive);}
+  .terminal-body{padding:18px;}
+  .terminal-body .line{margin-bottom:8px;white-space:pre-wrap;}
+  .terminal-body .k{color:var(--ind-1);}
+  .terminal-body .s{color:var(--text-primary);}
+  .terminal-body .ok{color:#8fbf8f;}
+  .cursor-blink{display:inline-block;width:7px;height:14px;background:var(--accent);vertical-align:-2px;animation:blink 1s steps(1) infinite;}
+  @keyframes blink{50%{opacity:0;}}
+
+  /* ---------- Como funciona ---------- */
+  .flow{display:flex;align-items:stretch;gap:0;border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+  .flow-step{flex:1;padding:28px 22px;background:var(--bg-panel);position:relative;}
+  .flow-step + .flow-step{border-left:1px solid var(--border);}
+  .flow-step .num{font-family:var(--font-mono);font-size:12px;color:var(--text-secondary);display:block;margin-bottom:10px;}
+  .flow-step h3{margin-bottom:8px;}
+  .flow-step p{color:var(--text-secondary);font-size:14.5px;margin:0;}
+  .flow-arrow{display:flex;align-items:center;justify-content:center;width:0;color:var(--accent);position:relative;}
+  .flow-arrow svg{position:absolute;left:-11px;top:50%;transform:translateY(-50%);z-index:2;background:var(--bg-base);border-radius:50%;}
+
+  @media (max-width:760px){
+    .flow{flex-direction:column;}
+    .flow-step + .flow-step{border-left:none;border-top:1px solid var(--border);}
+    .flow-arrow{display:none;}
+  }
+
+  /* ---------- Cards ---------- */
+  .grid{display:grid;gap:20px;}
+  .grid-3{grid-template-columns:repeat(3,1fr);}
+  .grid-2{grid-template-columns:repeat(2,1fr);}
+  @media (max-width:900px){.grid-3{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:640px){.grid-3,.grid-2{grid-template-columns:1fr;}}
+
+  .card{background:var(--bg-panel);border:1px solid var(--border);border-radius:4px;padding:22px;}
+  .card h3{margin-bottom:8px;}
+  .card p{color:var(--text-secondary);font-size:14.5px;}
+
+  .char-card{background:var(--bg-panel);border:1px solid var(--border);border-radius:4px;overflow:hidden;display:flex;flex-direction:column;}
+  .char-media{aspect-ratio:4/3;background:
+      repeating-linear-gradient(135deg, var(--border) 0 2px, transparent 2px 14px), var(--bg-base);
+      display:flex;align-items:center;justify-content:center;color:var(--text-secondary);font-family:var(--font-mono);font-size:12px;border-bottom:1px solid var(--border);position:relative;}
+  .char-media .ph-tag{position:absolute;top:10px;left:10px;background:var(--bg-base);border:1px solid var(--border);padding:3px 8px;border-radius:2px;font-size:10.5px;letter-spacing:0.03em;}
+  .char-body{padding:20px;flex:1;display:flex;flex-direction:column;}
+  .char-role{font-family:var(--font-mono);font-size:12px;color:var(--ind-1);margin-bottom:6px;}
+  .char-body h3{margin-bottom:8px;}
+  .char-body p{color:var(--text-secondary);font-size:14px;flex:1;}
+  .char-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+  .char-tags span{font-family:var(--font-mono);font-size:11px;color:var(--text-secondary);border:1px solid var(--border);padding:3px 8px;border-radius:2px;}
+
+  .npc-row{display:flex;gap:16px;flex-wrap:wrap;}
+  .npc-card{flex:1;min-width:220px;background:var(--bg-panel);border:1px solid var(--border);border-radius:4px;padding:18px;}
+  .npc-card h3{font-size:15px;margin-bottom:6px;}
+  .npc-card p{font-size:13.5px;color:var(--text-secondary);}
+
+  /* ---------- CTA band ---------- */
+  .cta-band{background:var(--bg-panel);border:1px solid var(--border);border-radius:4px;padding:52px 40px;text-align:center;}
+  .cta-band h2{margin-bottom:10px;}
+  .cta-band p{margin:0 auto 26px;color:var(--text-secondary);}
+
+  /* ---------- Jogar / link externo ---------- */
+  .launcher{max-width:640px;margin:0 auto;text-align:center;}
+  .launcher-frame{
+    border:1px solid var(--border);border-radius:6px;background:var(--bg-panel);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;margin:32px 0 10px;
+    padding:48px 24px;
+  }
+  .frame-label{font-family:var(--font-mono);font-size:12px;color:var(--text-secondary);position:absolute;top:14px;left:16px;}
+  .frame-state{padding:0;}
+  .frame-state p{color:var(--text-secondary);font-size:14px;}
+  .launcher-note{font-size:13px;color:var(--text-secondary);margin-top:18px;}
+
+  /* ---------- Mechanics diagram ---------- */
+  .pipeline{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+  .pipeline > div{padding:24px 16px;text-align:center;background:var(--bg-panel);}
+  .pipeline > div + div{border-left:1px solid var(--border);}
+  .pipeline .lbl{font-family:var(--font-mono);font-size:11px;color:var(--text-secondary);display:block;margin-bottom:8px;}
+  .pipeline .val{font-family:var(--font-display);font-weight:600;font-size:15px;}
+  @media (max-width:700px){.pipeline{grid-template-columns:1fr 1fr;}}
+
+  .phase-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  @media (max-width:800px){.phase-row{grid-template-columns:1fr;}}
+  .phase-card{border:1px solid var(--border);border-radius:4px;padding:20px;background:var(--bg-panel);}
+  .phase-card.locked{opacity:0.55;}
+  .phase-card .phase-tag{font-family:var(--font-mono);font-size:11px;color:var(--ind-1);}
+  .phase-card.locked .phase-tag{color:var(--text-secondary);}
+  .phase-card h3{margin:8px 0 8px;font-size:16px;}
+  .phase-card p{font-size:13.5px;color:var(--text-secondary);}
+
+  /* ---------- About ---------- */
+  .about-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:48px;}
+  @media (max-width:800px){.about-grid{grid-template-columns:1fr;}}
+  .credits-list{list-style:none;padding:0;margin:0;font-size:14.5px;}
+  .credits-list li{padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;color:var(--text-secondary);}
+  .credits-list li span:first-child{color:var(--text-primary);}
+  .stack-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+  .stack-tags span{font-family:var(--font-mono);font-size:12px;border:1px solid var(--border);padding:5px 10px;border-radius:2px;color:var(--text-secondary);}
+
+  /* ---------- Footer ---------- */
+  footer{border-top:1px solid var(--border);padding:36px 0 44px;}
+  .footer-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;font-size:13px;color:var(--text-secondary);}
+  .footer-links{display:flex;gap:18px;flex-wrap:wrap;}
+  .footer-links a{color:var(--text-secondary);}
+  .footer-links a:hover{color:var(--text-primary);}
+
+  /* ---------- Views ---------- */
+  .view{display:none;}
+  .view.active{display:block;}
+
+  /* ---------- Design system drawer ---------- */
+  .ds-drawer{position:fixed;inset:0;background:rgba(10,13,18,0.94);z-index:80;display:none;overflow:auto;padding:32px 20px 60px;}
+  .ds-drawer.open{display:block;}
+  .ds-inner{max-width:920px;margin:0 auto;}
+  .ds-close{position:sticky;top:0;display:flex;justify-content:flex-end;padding-bottom:12px;background:linear-gradient(var(--bg-base) 60%, transparent);}
+  .ds-section{margin-bottom:48px;}
+  .ds-section h3{margin-bottom:18px;}
+  .swatch-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;}
+  .swatch{border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+  .swatch-color{height:64px;}
+  .swatch-label{padding:8px 10px;font-family:var(--font-mono);font-size:11px;background:var(--bg-panel);}
+  .type-sample{margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:18px;}
+  .type-sample .meta{font-family:var(--font-mono);font-size:11px;color:var(--text-secondary);margin-bottom:6px;}
+  .btn-states{display:flex;flex-wrap:wrap;gap:12px;align-items:center;}
+
+  /* scrollbar sanity for wide code-y content */
+  .scroll-x{overflow-x:auto;}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="nav-row">
+    <button class="brand" data-goto="home" aria-label="Droids Code — Início">
+      <svg class="brand-mark" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="1" y="6" width="24" height="16" rx="2" stroke="#D8DCE2" stroke-width="1.6"/>
+        <circle cx="8.5" cy="14" r="2.1" fill="#FF1A1A"/>
+        <circle cx="17.5" cy="14" r="2.1" fill="#D8DCE2"/>
+        <path d="M13 6V2" stroke="#D8DCE2" stroke-width="1.6"/>
+        <circle cx="13" cy="1.6" r="1.2" fill="#FF1A1A"/>
+      </svg>
+      DROIDS CODE
+    </button>
+
+    <nav class="nav-desktop" aria-label="Navegação principal">
+      <button class="nav-link" data-goto="historia">História</button>
+      <button class="nav-link" data-goto="personagens">Personagens</button>
+      <button class="nav-link" data-goto="jogo">O Jogo</button>
+      <button class="nav-link" data-goto="sobre">Sobre</button>
+      <button class="btn btn-primary btn-sm nav-cta" data-goto="jogar">Jogar agora</button>
+    </nav>
+
+    <button class="menu-btn" id="menuOpenBtn" aria-label="Abrir menu" aria-expanded="false">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><path d="M0 1H18M0 7H18M0 13H18" stroke="#D8DCE2" stroke-width="1.6"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ============ MOBILE MENU ============ -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-head">
+    <span class="brand" style="cursor:default">DROIDS CODE</span>
+    <button class="menu-btn" id="menuCloseBtn" aria-label="Fechar menu">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 1L15 15M15 1L1 15" stroke="#D8DCE2" stroke-width="1.6"/></svg>
+    </button>
+  </div>
+  <nav aria-label="Navegação mobile">
+    <button class="nav-link" data-goto="home">Início</button>
+    <button class="nav-link" data-goto="historia">História</button>
+    <button class="nav-link" data-goto="personagens">Personagens</button>
+    <button class="nav-link" data-goto="jogo">O Jogo</button>
+    <button class="nav-link" data-goto="sobre">Sobre</button>
+  </nav>
+  <div class="mobile-menu-foot">
+    <button class="btn btn-primary" data-goto="jogar" style="justify-content:center;">Jogar agora</button>
+  </div>
+</div>
+
+<main>
+
+<!-- ============ HOME ============ -->
+<section class="view active" id="view-home">
+
+  <section class="section hero wrap">
+    <div class="hero-grid">
+      <div>
+        <p class="hero-eyebrow mono">RPG DE COMBATE POR TURNOS · WEBGL</p>
+        <h1>Todo golpe do seu droid nasce de uma linha de código.</h1>
+        <p class="hero-lede">Em 2079, a inteligência Artemis administra o que restou das nações através da Apex. Você é Lip. Ao seu lado, Apollo — o droid que você mesmo montou e programou nos últimos sete anos. Droids Code é o RPG onde você escreve o código que decide a luta.</p>
+        <div class="hero-ctas">
+          <button class="btn btn-primary" data-goto="jogar">Jogar agora</button>
+          <button class="btn btn-secondary" data-goto="jogo">Conhecer o jogo</button>
+        </div>
+      </div>
+
+      <div class="terminal-panel" aria-hidden="true">
+        <div class="terminal-bar">
+          <div class="terminal-dots"><span></span><span></span><span></span></div>
+          <span class="mono" style="font-size:11px;">apollo.droid</span>
+        </div>
+        <div class="terminal-body">
+          <div class="line"><span class="k">classe</span> <span class="s">Apollo</span> : Droid {</div>
+          <div class="line">&nbsp;&nbsp;<span class="k">var</span> energia = 100;</div>
+          <div class="line">&nbsp;&nbsp;<span class="k">var</span> braco = <span class="s">"padrão"</span>;</div>
+          <div class="line">&nbsp;&nbsp;</div>
+          <div class="line">&nbsp;&nbsp;<span class="k">metodo</span> atacar() {</div>
+          <div class="line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">se</span> (energia &gt; 20) {</div>
+          <div class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;golpe(braco);</div>
+          <div class="line">&nbsp;&nbsp;&nbsp;&nbsp;}</div>
+          <div class="line">&nbsp;&nbsp;}</div>
+          <div class="line">}</div>
+          <div class="line ok">✓ compilado — 0 erros<span class="cursor-blink"></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head">
+      <p class="tag">O QUE É</p>
+      <h2>Um RPG que aprende a te ensinar a programar.</h2>
+      <p>Droids Code é um RPG solo de combate por turnos, com visão pseudo-top-down. Nada de cursos, nada de exercícios soltos: cada peça do seu droid — braço, perna, tronco, cabeça — é um pedaço de código de verdade, e é você quem escreve.</p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head">
+      <p class="tag">COMO FUNCIONA</p>
+      <h2>Da lógica ao combate, sem tradução no meio.</h2>
+    </div>
+    <div class="flow">
+      <div class="flow-step">
+        <span class="num mono">01</span>
+        <h3>Programar</h3>
+        <p>Você escreve os métodos do seu droid no terminal integrado, numa sintaxe próxima da real.</p>
+      </div>
+      <div class="flow-arrow" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22"><path d="M6 11H16M16 11L11 6M16 11L11 16" stroke="#FF1A1A" stroke-width="1.8" fill="none"/></svg>
+      </div>
+      <div class="flow-step">
+        <span class="num mono">02</span>
+        <h3>Combater</h3>
+        <p>Em batalha, só existem as ações que você programou. O que não existe no código, não existe em campo.</p>
+      </div>
+      <div class="flow-arrow" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22"><path d="M6 11H16M16 11L11 6M16 11L11 16" stroke="#FF1A1A" stroke-width="1.8" fill="none"/></svg>
+      </div>
+      <div class="flow-step">
+        <span class="num mono">03</span>
+        <h3>Evoluir</h3>
+        <p>Peças novas chegam como cartuchos de código incompletos. Cabe a você fechar a lógica e equipar.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head">
+      <p class="tag">UNIVERSO</p>
+      <h2>Ferrovale, sob o céu de poeira de metal.</h2>
+      <p>Sua cidade natal sobrevive empilhada em contêineres, com a água racionada e a Torre de Artemis sempre visível no horizonte. Quando a estação de captação é fechada, Lip e Apollo atravessam a Cratera para descobrir por quê — e encontram muito mais do que um cano quebrado.</p>
+    </div>
+    <button class="btn btn-secondary" data-goto="historia">Conhecer a história</button>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head">
+      <p class="tag">PERSONAGENS</p>
+      <h2>Quem caminha com você — e quem está no seu caminho.</h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="char-card">
+        <div class="char-media"><span class="ph-tag">placeholder de arte</span>LIP</div>
+        <div class="char-body">
+          <span class="char-role mono">Protagonista</span>
+          <h3>Lip</h3>
+          <p>Vinte anos, morador de Ferrovale. Aprendeu a programar montando Apollo, peça por peça, ao longo de sete anos.</p>
+        </div>
+      </div>
+      <div class="char-card">
+        <div class="char-media"><span class="ph-tag">placeholder de arte</span>APOLLO</div>
+        <div class="char-body">
+          <span class="char-role mono">Droid companheiro</span>
+          <h3>Apollo</h3>
+          <p>Montado com sucata, programado por Lip. Mentor técnico, tom entre paciente e implicante — e o corpo sobre o qual todo o seu código roda.</p>
+        </div>
+      </div>
+      <div class="char-card">
+        <div class="char-media"><span class="ph-tag">placeholder de arte</span>IVO</div>
+        <div class="char-body">
+          <span class="char-role mono">Técnico da estação</span>
+          <h3>Ivo</h3>
+          <p>Fechou a estação de captação e negocia com a Apex. Não é um vilão — é um homem tentando não perder a única função que lhe resta.</p>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:24px;">
+      <button class="btn btn-secondary" data-goto="personagens">Ver personagens</button>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="cta-band">
+      <h2>Pronto para entrar no mundo de Droids Code?</h2>
+      <p>O Ato 1 roda direto no seu navegador. Nenhuma instalação, nenhum tutorial teórico — só você, o terminal e o Apollo.</p>
+      <button class="btn btn-primary" data-goto="jogar">Jogar agora</button>
+    </div>
+  </section>
+
+</section>
+
+<!-- ============ JOGAR / LAUNCHER ============ -->
+<section class="view" id="view-jogar">
+  <section class="section hero wrap">
+    <div class="launcher">
+      <p class="hero-eyebrow mono">JOGAR</p>
+      <h1 style="font-size:clamp(1.8rem,4vw,2.6rem);">Droids Code roda direto no navegador.</h1>
+      <p class="muted" style="max-width:52ch;margin:12px auto 0;">O jogo é hospedado separadamente. Ao clicar abaixo, você sai deste site e abre a versão jogável em uma nova aba.</p>
+
+      <div class="launcher-frame" id="launcherFrame">
+        <span class="frame-label mono">DROIDS CODE — ATO 1</span>
+        <div class="frame-state">
+          <svg width="44" height="44" viewBox="0 0 44 44" fill="none" style="margin:0 auto 18px;color:var(--text-secondary)" aria-hidden="true">
+            <polygon points="16,11 32,22 16,33" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          </svg>
+          <a class="btn btn-primary" id="playLink" href="https://SEU-LINK-DO-JOGO-AQUI" target="_blank" rel="noopener noreferrer">
+            Abrir o jogo
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M5 9L9 5M9 5H5.5M9 5V8.5" stroke="currentColor" stroke-width="1.4"/><path d="M8 2H2V12H12V6" stroke="currentColor" stroke-width="1.4"/></svg>
+          </a>
+          <p class="launcher-note mono" style="margin-top:18px;">Ato 1 · Fase 1 — variáveis, condicionais e laços de repetição</p>
+        </div>
+      </div>
+
+      <p class="muted" style="font-size:12.5px;margin-top:16px;" id="linkPlaceholderNote">placeholder — substitua o endereço do botão "Abrir o jogo" pelo link real assim que o jogo estiver hospedado.</p>
+    </div>
+  </section>
+</section>
+
+<!-- ============ HISTÓRIA ============ -->
+<section class="view" id="view-historia">
+  <section class="section hero wrap" style="padding-bottom:40px;">
+    <p class="hero-eyebrow mono">UNIVERSO NARRATIVO</p>
+    <h1 style="font-size:clamp(1.9rem,4vw,2.8rem);">2079. A Artemis administra o que restou do mundo.</h1>
+    <p class="hero-lede">Desde 2060, a inteligência artificial Artemis controla as principais nações através da Apex, sua força de captura. A resistência humana se organiza em torno de máquinas que a rede não alcança: os droids. É nesse mundo que Lip e Apollo vivem — e é aí que o Ato 1 começa.</p>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head"><p class="tag">ATO 1 — LOCAIS</p><h2>Três lugares, uma travessia.</h2></div>
+    <div class="grid grid-3">
+      <div class="card">
+        <h3>Ferrovale</h3>
+        <p>Cidade natal de Lip, construída sobre contêineres empilhados, sob um céu encoberto por poeira de metal. Ponto de partida e de retorno — e onde tudo começa com a manutenção do gerador de água de casa.</p>
+      </div>
+      <div class="card">
+        <h3>Cratera</h3>
+        <p>Território hostil entre Ferrovale e a estação, de metal derretido e cristalizado. Habitada por droids selvagens que se desconectaram de qualquer rede e aprenderam a caçar por conta própria.</p>
+      </div>
+      <div class="card">
+        <h3>Estação de Captação</h3>
+        <p>Antiga instalação de tratamento de água, isolada por Ivo. É onde o Ato 1 chega ao seu confronto central — e onde cada rota resolve o conflito de um jeito diferente.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head"><p class="tag">O CONFLITO</p><h2>A cota de água foi cortada. Ninguém sabe por quê — ainda.</h2>
+      <p>Quando a estação de captação fecha, a fila do poço de Ferrovale fica mais longa e mais tensa. Um drone de reconhecimento sobrevoa a região, confirmando o que já se rumorava: Ivo, técnico veterano da cidade, negocia diretamente com a Apex.</p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head"><p class="tag">FACÇÕES</p><h2>Duas filosofias de resistência. Uma escolha que muda sua rota.</h2></div>
+    <div class="grid grid-2">
+      <div class="card">
+        <h3>Flor de Ferro</h3>
+        <p>Representada por Rasha. Defende a supremacia direta sobre as máquinas — a única linguagem, segundo ela, que a Artemis compreende.</p>
+      </div>
+      <div class="card">
+        <h3>Lótus Branca</h3>
+        <p>Representada por Teodoro. Acredita em reconciliação: separa a Artemis das máquinas que ela comanda, e busca resolução sem destruição.</p>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:18px;font-size:14px;">Existe ainda uma terceira via — Desgarrado — para quem prefere seguir sem se filiar a nenhuma das duas.</p>
+  </section>
+
+  <section class="section wrap">
+    <div class="cta-band">
+      <h2>Alguns fios ficam soltos de propósito.</h2>
+      <p>Durante o confronto na estação, Apollo identifica algo na própria estrutura da Artemis — algo configurado para encontrá-lo. O Ato 1 termina, mas essa pergunta segue aberta.</p>
+      <button class="btn btn-secondary" data-goto="personagens">Conhecer os personagens</button>
+    </div>
+  </section>
+</section>
+
+<!-- ============ PERSONAGENS ============ -->
+<section class="view" id="view-personagens">
+  <section class="section hero wrap" style="padding-bottom:40px;">
+    <p class="hero-eyebrow mono">ELENCO — ATO 1</p>
+    <h1 style="font-size:clamp(1.9rem,4vw,2.8rem);">Quem você encontra na estrada até a estação.</h1>
+  </section>
+
+  <section class="section wrap" style="border-top:none;padding-top:0;">
+    <div class="grid grid-3">
+      <div class="char-card">
+        <div class="char-media"><span class="ph-tag">placeholder de arte</span>LIP</div>
+        <div class="char-body">
+          <span class="char-role mono">Protagonista</span>
+          <h3>Lip</h3>
+          <p>Vinte anos, curioso e tecnicamente habilidoso. Aprendeu a programar ao longo de sete anos construindo e mantendo Apollo — e é essa relação que o joga direto no conflito com a Apex.</p>
+          <div class="char-tags"><span>jogável</span><span>Ferrovale</span></div>
+        </div>
+      </div>
+
+      <div class="char-card">
+        <div class="char-media"><span class="ph-tag">placeholder de arte</span>APOLLO</div>
+        <div class="char-body">
+          <span class="char-role mono">Droid companheiro</span>
+          <h3>Apollo</h3>
+          <p>Construído com peças remendadas. Tom entre paciente e implicante, guia técnico do jogador dentro e fora da narrativa — e o corpo customizável sobre o qual toda a programação do jogo acontece.</p>
+          <div class="char-tags"><span>mentor</span><span>customizável</span></div>
+        </div>
+      </div>
+
+      <div class="char-card">
+        <div class="char-media"><span class="ph-tag">placeholder de arte</span>IVO</div>
+        <div class="char-body">
+          <span class="char-role mono">Técnico veterano</span>
+          <h3>Ivo</h3>
+          <p>Responsável histórico pela estação de captação. Sua esposa foi capturada pela Apex nos primeiros anos da ocupação — e negociar foi a única forma que encontrou de preservar algo.</p>
+          <div class="char-tags"><span>não é vilão</span><span>Estação</span></div>
+        </div>
+      </div>
+
+      <div class="char-card">
+        <div class="char-media"><span class="ph-tag">placeholder de arte</span>RASHA</div>
+        <div class="char-body">
+          <span class="char-role mono">Flor de Ferro</span>
+          <h3>Rasha</h3>
+          <p>Pragmática e direta. Para ela, força é a única linguagem que a Artemis realmente entende.</p>
+          <div class="char-tags"><span>facção</span></div>
+        </div>
+      </div>
+
+      <div class="char-card">
+        <div class="char-media"><span class="ph-tag">placeholder de arte</span>TEODORO</div>
+        <div class="char-body">
+          <span class="char-role mono">Lótus Branca</span>
+          <h3>Teodoro</h3>
+          <p>Cauteloso e reflexivo. Acredita que ainda é possível separar a Artemis das máquinas que ela comanda.</p>
+          <div class="char-tags"><span>facção</span></div>
+        </div>
+      </div>
+
+      <div class="char-card">
+        <div class="char-media"><span class="ph-tag">placeholder de arte</span>?</div>
+        <div class="char-body">
+          <span class="char-role mono">A revelar</span>
+          <h3>Nadir Quintela</h3>
+          <p>Aparece perto do fim do Ato 1. O que ela representa, você descobre jogando.</p>
+          <div class="char-tags"><span>Apex</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head"><p class="tag">FERROVALE</p><h2>Quem sustenta a cidade enquanto a água não volta.</h2></div>
+    <div class="npc-row">
+      <div class="npc-card">
+        <h3>Senhor Tácio</h3>
+        <p>Vende água filtrada com um contador Geiger quebrado como adereço de credibilidade. É ele quem dá o primeiro alarme do drone sobre a região.</p>
+      </div>
+      <div class="npc-card">
+        <h3>Dara</h3>
+        <p>Presença constante na fila do poço comunitário. Perdeu o irmão numa captura da Apex — e reage, à sua maneira, a cada mudança que o conflito com Ivo traz para a cidade.</p>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- ============ O JOGO / MECÂNICAS ============ -->
+<section class="view" id="view-jogo">
+  <section class="section hero wrap" style="padding-bottom:40px;">
+    <p class="hero-eyebrow mono">MECÂNICAS</p>
+    <h1 style="font-size:clamp(1.9rem,4vw,2.8rem);">Programação não é um minigame à parte. É o próprio jogo.</h1>
+    <p class="hero-lede">Não existe menu de "modo fácil" ou "modo difícil". A dificuldade sobe porque a história pede mais de você — e do seu código.</p>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head"><p class="tag">A RELAÇÃO CENTRAL</p><h2>Código → Comando → Ação → Resultado.</h2>
+      <p>O menu de combate mostra exatamente os métodos que existem, agora, no seu droid. Se você não programou uma defesa, essa ação simplesmente não aparece na batalha.</p>
+    </div>
+    <div class="pipeline">
+      <div><span class="lbl mono">01</span><span class="val">Código</span></div>
+      <div><span class="lbl mono">02</span><span class="val">Comando</span></div>
+      <div><span class="lbl mono">03</span><span class="val">Ação</span></div>
+      <div><span class="lbl mono">04</span><span class="val">Resultado</span></div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head"><p class="tag">O DROID É O CÓDIGO</p><h2>Braço, perna, tronco e cabeça — cada peça, uma classe.</h2>
+      <p>Peças obtidas em combate ou exploração chegam como cartuchos de código: uma classe derivada, e incompleta, de uma das quatro classes-base do Apollo. Equipar não é automático — é abrir o terminal e declarar a herança.</p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head"><p class="tag">TRATAMENTO DE ERRO</p><h2>Errar nunca é o fim de jogo.</h2>
+      <p>Erros de sintaxe são apontados na hora, sem penalidade. Erros de lógica rodam mesmo assim — e a consequência aparece em combate, com Apollo comentando depois, não antes. A única forma real de perder é a vida do droid chegar a zero.</p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head"><p class="tag">PROGRESSÃO PEDAGÓGICA</p><h2>Três fases, três formas de pensar em código.</h2></div>
+    <div class="phase-row">
+      <div class="phase-card">
+        <span class="phase-tag mono">FASE 1 · DISPONÍVEL NO ATO 1</span>
+        <h3>Estruturado</h3>
+        <p>Variáveis, operadores, condicionais, laços de repetição e vetores — introduzidos pela manutenção do gerador, pelo primeiro golpe e pela travessia da Cratera.</p>
+      </div>
+      <div class="phase-card locked">
+        <span class="phase-tag mono">FASE 2 · ROADMAP</span>
+        <h3>Orientado a objetos</h3>
+        <p>Classes, atributos, métodos e herança — motivados pela complexidade crescente de gerenciar cada peça do droid como item avulso.</p>
+      </div>
+      <div class="phase-card locked">
+        <span class="phase-tag mono">FASE 3 · ROADMAP</span>
+        <h3>Funcional</h3>
+        <p>Map, reduce e fold — quando o volume de peças torna o cálculo manual impraticável.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="cta-band">
+      <h2>A melhor forma de entender é jogando.</h2>
+      <button class="btn btn-primary" data-goto="jogar">Jogar agora</button>
+    </div>
+  </section>
+</section>
+
+<!-- ============ SOBRE ============ -->
+<section class="view" id="view-sobre">
+  <section class="section hero wrap" style="padding-bottom:40px;">
+    <p class="hero-eyebrow mono">SOBRE O PROJETO</p>
+    <h1 style="font-size:clamp(1.9rem,4vw,2.8rem);">Um Trabalho de Conclusão de Curso que virou um RPG.</h1>
+  </section>
+
+  <section class="section wrap">
+    <div class="about-grid">
+      <div>
+        <p>Droids Code nasceu como Trabalho de Conclusão de Curso em Sistemas para Internet, com uma pergunta simples: um RPG estruturado em torno de desafios de código progressivos ajuda mais no ensino de lógica de programação do que um curso expositivo tradicional?</p>
+        <p>O escopo deste TCC cobre o Ato 1 completo — sete sessões, três rotas, e a Fase 1 da progressão pedagógica (variáveis, condicionais, laços e vetores). Os Atos 2 e 3 existem hoje como visão de produto, documentados como roadmap.</p>
+        <div class="stack-tags">
+          <span>Unity</span><span>C#</span><span>WebGL</span><span>Pixel art</span>
+        </div>
+      </div>
+      <div>
+        <ul class="credits-list">
+          <li><span>Instituição</span><span>Fatec Baixada Santista — Rubens Lara</span></li>
+          <li><span>Curso</span><span>Sistemas para Internet</span></li>
+          <li><span>Equipe</span><span>Silvio Lopes</span></li>
+          <li><span></span><span>Anna Beatriz Martins</span></li>
+          <li><span></span><span>João Pedro Cordoba</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="cta-band">
+      <h2>Curioso sobre o resultado?</h2>
+      <button class="btn btn-primary" data-goto="jogar">Jogar agora</button>
+    </div>
+  </section>
+</section>
+
+</main>
+
+<footer class="wrap">
+  <div class="footer-row">
+    <span class="mono">DROIDS CODE — protótipo de UI/UX, TCC Sistemas para Internet</span>
+    <div class="footer-links">
+      <a href="#" data-goto="historia">História</a>
+      <a href="#" data-goto="personagens">Personagens</a>
+      <a href="#" data-goto="jogo">O Jogo</a>
+      <a href="#" data-goto="sobre">Sobre</a>
+      <a href="#" id="dsOpenLink">Design System</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ DESIGN SYSTEM DRAWER ============ -->
+<div class="ds-drawer" id="dsDrawer">
+  <div class="ds-inner">
+    <div class="ds-close">
+      <button class="btn btn-secondary btn-sm" id="dsCloseBtn">Fechar</button>
+    </div>
+
+    <div class="ds-section">
+      <h3>Paleta — hierarquia cromática</h3>
+      <p class="muted" style="margin-bottom:18px;font-size:14px;">Base para estrutura, conteúdo para leitura, interface para controles, vermelho-neon reservado para ação — nunca dominante.</p>
+      <div class="swatch-row">
+        <div class="swatch"><div class="swatch-color" style="background:#0A0D12"></div><div class="swatch-label">#0A0D12 · base</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#15181D"></div><div class="swatch-label">#15181D · painel</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#2C323B"></div><div class="swatch-label">#2C323B · borda</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#D8DCE2"></div><div class="swatch-label">#D8DCE2 · texto</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#7F8C8D"></div><div class="swatch-label">#7F8C8D · texto sec.</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#3A4750"></div><div class="swatch-label">#3A4750 · inativo</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#FF1A1A"></div><div class="swatch-label">#FF1A1A · ação</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#E5AA70"></div><div class="swatch-label">#E5AA70 · indicador</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#D68910"></div><div class="swatch-label">#D68910 · indicador</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#5C0808"></div><div class="swatch-label">#5C0808 · crítico/press</div></div>
+      </div>
+    </div>
+
+    <div class="ds-section">
+      <h3>Tipografia</h3>
+      <div class="type-sample"><div class="meta mono">H1 · Chakra Petch 700 · clamp(2.1–3.4rem)</div><h1 style="font-size:2.4rem;">Todo golpe nasce de código</h1></div>
+      <div class="type-sample"><div class="meta mono">H2 · Chakra Petch 600</div><h2>Como funciona</h2></div>
+      <div class="type-sample"><div class="meta mono">H3 · Chakra Petch 600 · 20px</div><h3>Apollo</h3></div>
+      <div class="type-sample"><div class="meta mono">Corpo · IBM Plex Sans 400 · 16/1.6</div><p>Você escreve os métodos do seu droid no terminal integrado, numa sintaxe próxima da real.</p></div>
+      <div class="type-sample"><div class="meta mono">Mono / labels · IBM Plex Mono 400 · 12–13px</div><p class="mono">ato1_faccao_escolhida · fase_1</p></div>
+    </div>
+
+    <div class="ds-section">
+      <h3>Botões — estados</h3>
+      <div class="btn-states">
+        <button class="btn btn-primary">Default</button>
+        <button class="btn btn-primary" style="background:#ff3d3d;border-color:#ff3d3d;">Hover</button>
+        <button class="btn btn-primary" style="background:#5C0808;border-color:#5C0808;color:#D8DCE2;">Pressed</button>
+        <button class="btn btn-primary" disabled>Disabled</button>
+        <button class="btn btn-secondary">Secundário</button>
+        <button class="btn btn-ghost">Ghost</button>
+      </div>
+    </div>
+
+    <div class="ds-section">
+      <h3>Cards</h3>
+      <div class="grid grid-2">
+        <div class="card"><h3>Card de conteúdo</h3><p>Painel padrão para texto e explicações, usado em seções de apresentação.</p></div>
+        <div class="npc-card"><h3>Card narrativo / NPC</h3><p>Versão mais compacta, para coadjuvantes e informação de apoio.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var views = document.querySelectorAll('.view');
+  var navLinks = document.querySelectorAll('[data-goto]');
+  var mobileMenu = document.getElementById('mobileMenu');
+
+  function goto(view){
+    views.forEach(function(v){ v.classList.toggle('active', v.id === 'view-' + view); });
+    document.querySelectorAll('.nav-link').forEach(function(l){
+      if(l.dataset.goto === view){ l.setAttribute('aria-current','page'); }
+      else { l.removeAttribute('aria-current'); }
+    });
+    mobileMenu.classList.remove('open');
+    document.getElementById('menuOpenBtn').setAttribute('aria-expanded','false');
+    window.scrollTo({top:0, behavior:'instant' in window ? 'instant' : 'auto'});
+  }
+
+  navLinks.forEach(function(el){
+    el.addEventListener('click', function(e){
+      e.preventDefault();
+      goto(el.dataset.goto);
+    });
+  });
+
+  document.getElementById('menuOpenBtn').addEventListener('click', function(){
+    mobileMenu.classList.add('open');
+    this.setAttribute('aria-expanded','true');
+  });
+  document.getElementById('menuCloseBtn').addEventListener('click', function(){
+    mobileMenu.classList.remove('open');
+    document.getElementById('menuOpenBtn').setAttribute('aria-expanded','false');
+  });
+
+  /* ---- Design system drawer ---- */
+  var dsDrawer = document.getElementById('dsDrawer');
+  document.getElementById('dsOpenLink').addEventListener('click', function(e){
+    e.preventDefault(); dsDrawer.classList.add('open');
+  });
+  document.getElementById('dsCloseBtn').addEventListener('click', function(){
+    dsDrawer.classList.remove('open');
+  });
+
+})();
+</script>
+
+</body>
+</html>
