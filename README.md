@@ -40,4 +40,8 @@ Abra `index.html` diretamente no navegador — não precisa de servidor.
 
 - Títulos: Chakra Petch
 - Corpo: IBM Plex Sans
-- Código / labels: IBM Plex Mono
+- - Código / labels: IBM Plex Mono
+ 
+## Documentação
+Clique aqui para [Acessar o Relatório PDF](./Droids_Code_UIUX_Documentacao.pdf)
+
